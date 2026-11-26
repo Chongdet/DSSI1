@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>หน้าเว็บทดลอง</title>
+  <style>
+    body { font-family: sans-serif; background: #f3f5ef; padding: 48px; }
+    main { max-width: 420px; margin: auto; padding: 28px; border-radius: 16px; background: white; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; color: white; background: #536447; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>สวัสดี 👋</h1>
+    <p id="message">นี่คือหน้าเว็บ HTML ทดลองแบบสั้น ๆ</p>
+    <button id="greet" type="button">ทักทาย</button>
+  </main>
+  <script>
+    document.querySelector("#greet").addEventListener("click", () => {
+      document.querySelector("#message").textContent = "ยินดีต้อนรับสู่หน้าเว็บทดลอง!";
+    });
+  </script>
+</body>
+</html>
