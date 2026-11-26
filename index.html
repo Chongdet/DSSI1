@@ -130,6 +130,40 @@
       font-size: 1rem;
     }
 
+    .filters {
+      display: flex;
+      gap: 4px;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 12px;
+      padding: 4px;
+      border-radius: 12px;
+      background: #f4f4ef;
+    }
+
+    .filter-button {
+      padding: 7px 11px;
+      border: 0;
+      border-radius: 9px;
+      color: #74766c;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+
+    .filter-button[aria-pressed="true"] {
+      color: #35452c;
+      background: #fff;
+      box-shadow: 0 1px 3px rgb(52 48 36 / 10%);
+      font-weight: 650;
+    }
+
+    .filter-button:focus-visible {
+      outline: 3px solid #9aab87;
+      outline-offset: 2px;
+    }
+
     .count {
       color: #85867d;
       font-size: 0.85rem;
@@ -260,6 +294,12 @@
         <span class="count" id="task-count" aria-live="polite"></span>
       </div>
 
+      <div class="filters" role="group" aria-label="กรองรายการ">
+        <button class="filter-button" type="button" data-filter="all" aria-pressed="true">ทั้งหมด</button>
+        <button class="filter-button" type="button" data-filter="active" aria-pressed="false">ยังไม่เสร็จ</button>
+        <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">เสร็จแล้ว</button>
+      </div>
+
       <ul class="tasks" id="task-list" aria-live="polite"></ul>
 
       <div class="footer">
@@ -278,6 +318,7 @@
     const list = document.querySelector("#task-list");
     const count = document.querySelector("#task-count");
     const clearCompletedButton = document.querySelector("#clear-completed");
+    const filterButtons = document.querySelectorAll("[data-filter]");
 
     function loadTasks() {
       try {
@@ -298,6 +339,7 @@
     }
 
     let tasks = loadTasks();
+    let activeFilter = "all";
 
     function saveTasks() {
       try {
@@ -311,13 +353,30 @@
     function renderTasks() {
       list.replaceChildren();
 
+      const visibleTasks = tasks.filter((task) => {
+        if (activeFilter === "active") {
+          return !task.done;
+        }
+        if (activeFilter === "completed") {
+          return task.done;
+        }
+        return true;
+      });
+
       if (tasks.length === 0) {
         const empty = document.createElement("li");
         empty.className = "empty";
         empty.textContent = "ยังไม่มีรายการ ลองเพิ่มสิ่งแรกของวันนี้ดูสิ";
         list.append(empty);
+      } else if (visibleTasks.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty";
+        empty.textContent = activeFilter === "active"
+          ? "ไม่มีรายการที่ยังไม่เสร็จ"
+          : "ยังไม่มีรายการที่เสร็จแล้ว";
+        list.append(empty);
       } else {
-        for (const task of tasks) {
+        for (const task of visibleTasks) {
           const item = document.createElement("li");
           item.className = task.done ? "task done" : "task";
 
@@ -355,7 +414,17 @@
       const remaining = tasks.filter((task) => !task.done).length;
       count.textContent = `เหลือ ${remaining} รายการ`;
       clearCompletedButton.hidden = !tasks.some((task) => task.done);
+      filterButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.filter === activeFilter));
+      });
     }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        renderTasks();
+      });
+    });
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
