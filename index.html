@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4f0">
+  <title>วันนี้ทำอะไรดี — รายการสิ่งที่ต้องทำ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #24251f;
+      background: #f5f4f0;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 20px;
+      background:
+        radial-gradient(ellipse at 12% 8%, #e8eee1 0, transparent 34%),
+        radial-gradient(ellipse at 92% 88%, #f0e9dd 0, transparent 30%),
+        #f5f4f0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(100%, 560px);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #75816a;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 3rem);
+      letter-spacing: -0.06em;
+      line-height: 1.15;
+    }
+
+    .intro {
+      margin: 12px 0 28px;
+      color: #77786f;
+      line-height: 1.6;
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid #e8e6df;
+      border-radius: 20px;
+      background: rgb(255 255 255 / 88%);
+      box-shadow: 0 18px 50px rgb(52 48 36 / 7%);
+    }
+
+    .form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form input {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 15px;
+      border: 1px solid #e4e3dc;
+      border-radius: 12px;
+      outline: none;
+      background: #fbfbf9;
+    }
+
+    .form input:focus {
+      border-color: #748264;
+      box-shadow: 0 0 0 3px rgb(116 130 100 / 14%);
+    }
+
+    .add-button {
+      flex: 0 0 auto;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 12px;
+      color: white;
+      background: #536447;
+      cursor: pointer;
+      font-weight: 650;
+      transition: background 150ms ease, transform 150ms ease;
+    }
+
+    .add-button:hover {
+      transform: translateY(-1px);
+      background: #435238;
+    }
+
+    .add-button:focus-visible,
+    .delete-button:focus-visible,
+    .clear-button:focus-visible,
+    .task-check:focus-visible {
+      outline: 3px solid #9aab87;
+      outline-offset: 3px;
+    }
+
+    .list-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 2px 12px;
+    }
+
+    .list-heading h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .count {
+      color: #85867d;
+      font-size: 0.85rem;
+    }
+
+    .tasks {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 54px;
+      padding: 9px 10px 9px 14px;
+      border: 1px solid #eeede8;
+      border-radius: 13px;
+      background: #fff;
+    }
+
+    .task-check {
+      width: 19px;
+      height: 19px;
+      flex: 0 0 auto;
+      margin: 0;
+      accent-color: #536447;
+      cursor: pointer;
+    }
+
+    .task-text {
+      flex: 1;
+      overflow-wrap: anywhere;
+      line-height: 1.45;
+    }
+
+    .task.done .task-text {
+      color: #999a91;
+      text-decoration: line-through;
+    }
+
+    .delete-button,
+    .clear-button {
+      border: 0;
+      color: #898a81;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .delete-button {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .delete-button:hover {
+      color: #9a4c40;
+      background: #fbefed;
+    }
+
+    .empty {
+      padding: 26px 12px;
+      color: #8b8c83;
+      text-align: center;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      color: #85867d;
+      font-size: 0.84rem;
+    }
+
+    .clear-button {
+      padding: 0;
+      color: #657455;
+      font-size: inherit;
+    }
+
+    .clear-button:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 32px 16px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .add-button {
+        padding: 0 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <p class="eyebrow">พื้นที่เล็กๆ สำหรับวันนี้</p>
+    <h1>วันนี้ทำอะไรดี?</h1>
+    <p class="intro">ค่อยๆ จัดการทีละอย่าง แล้วอย่าลืมพักด้วยนะ</p>
+
+    <section class="card" aria-label="รายการสิ่งที่ต้องทำ">
+      <form class="form" id="task-form">
+        <input
+          id="task-input"
+          name="task"
+          type="text"
+          placeholder="เพิ่มสิ่งที่อยากทำ..."
+          aria-label="สิ่งที่อยากทำ"
+          maxlength="160"
+          required
+        >
+        <button class="add-button" type="submit">เพิ่ม</button>
+      </form>
+
+      <div class="list-heading">
+        <h2>รายการของฉัน</h2>
+        <span class="count" id="task-count" aria-live="polite"></span>
+      </div>
+
+      <ul class="tasks" id="task-list" aria-live="polite"></ul>
+
+      <div class="footer">
+        <span>บันทึกไว้ในอุปกรณ์นี้</span>
+        <button class="clear-button" id="clear-completed" type="button" hidden>
+          ลบรายการที่เสร็จแล้ว
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "simple-todo-tasks";
+    const form = document.querySelector("#task-form");
+    const input = document.querySelector("#task-input");
+    const list = document.querySelector("#task-list");
+    const count = document.querySelector("#task-count");
+    const clearCompletedButton = document.querySelector("#clear-completed");
+
+    function loadTasks() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        const tasks = saved ? JSON.parse(saved) : [];
+        return Array.isArray(tasks)
+          ? tasks.filter((task) =>
+              task &&
+              typeof task.id === "string" &&
+              typeof task.text === "string" &&
+              typeof task.done === "boolean"
+            )
+          : [];
+      } catch (error) {
+        console.error("ไม่สามารถอ่านรายการที่บันทึกไว้ได้", error);
+        return [];
+      }
+    }
+
+    let tasks = loadTasks();
+
+    function saveTasks() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(tasks));
+      } catch (error) {
+        console.error("ไม่สามารถบันทึกรายการได้", error);
+        count.textContent = "บันทึกไม่สำเร็จ";
+      }
+    }
+
+    function renderTasks() {
+      list.replaceChildren();
+
+      if (tasks.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty";
+        empty.textContent = "ยังไม่มีรายการ ลองเพิ่มสิ่งแรกของวันนี้ดูสิ";
+        list.append(empty);
+      } else {
+        for (const task of tasks) {
+          const item = document.createElement("li");
+          item.className = task.done ? "task done" : "task";
+
+          const checkbox = document.createElement("input");
+          checkbox.className = "task-check";
+          checkbox.type = "checkbox";
+          checkbox.checked = task.done;
+          checkbox.setAttribute("aria-label", `ทำ "${task.text}" เสร็จแล้ว`);
+          checkbox.addEventListener("change", () => {
+            task.done = checkbox.checked;
+            saveTasks();
+            renderTasks();
+          });
+
+          const text = document.createElement("span");
+          text.className = "task-text";
+          text.textContent = task.text;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "delete-button";
+          deleteButton.type = "button";
+          deleteButton.textContent = "×";
+          deleteButton.setAttribute("aria-label", `ลบ "${task.text}"`);
+          deleteButton.addEventListener("click", () => {
+            tasks = tasks.filter((entry) => entry.id !== task.id);
+            saveTasks();
+            renderTasks();
+          });
+
+          item.append(checkbox, text, deleteButton);
+          list.append(item);
+        }
+      }
+
+      const remaining = tasks.filter((task) => !task.done).length;
+      count.textContent = `เหลือ ${remaining} รายการ`;
+      clearCompletedButton.hidden = !tasks.some((task) => task.done);
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = input.value.trim();
+      if (!text) {
+        input.focus();
+        return;
+      }
+
+      tasks.push({ id: crypto.randomUUID(), text, done: false });
+      saveTasks();
+      renderTasks();
+      form.reset();
+      input.focus();
+    });
+
+    clearCompletedButton.addEventListener("click", () => {
+      tasks = tasks.filter((task) => !task.done);
+      saveTasks();
+      renderTasks();
+    });
+
+    renderTasks();
+  </script>
+</body>
+</html>
